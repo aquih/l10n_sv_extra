@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_sv_view_account_journal_form" model="ir.ui.view">
+            <field name="name">l10n_sv_extra.view_account_journal_form</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="resolucion" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                    <field name="serie" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                    <field name="rango_inicio" attrs="{'invisible': [('type', 'not in', ['sale'])]}"/>
+                    <field name="rango_fin" attrs="{'invisible': [('type', 'not in', ['sale'])]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
