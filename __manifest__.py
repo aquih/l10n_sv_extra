@@ -10,6 +10,10 @@
     'depends': ['l10n_sv'],
     'data': [
         'views/account_view.xml',
+        'views/reporte_ventas.xml',
+        'views/reporte_compras.xml',
+        'views/reporte_mayor.xml',
+        'views/report.xml',
 #        'security/ir.model.access.csv',
     ],
     'demo': [],
