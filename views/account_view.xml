@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
                     <field name="direccion" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                    <field name="facturas_por_rangos" attrs="{'invisible': [('type', 'not in', ['sale'])]}"/>
                     <field name="resolucion" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                     <field name="serie" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                     <field name="rango_inicio" attrs="{'invisible': [('type', 'not in', ['sale'])]}"/>
