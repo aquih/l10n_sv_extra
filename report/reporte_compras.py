@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from odoo import api, models
+from odoo.exceptions import UserError
 from datetime import datetime
 import logging
 
@@ -83,13 +84,13 @@ class ReporteCompras(models.AbstractModel):
                     else:
                         tipo_linea = 'servicio'
 
-                r = l.invoice_line_tax_ids.compute_all(precio, currency=f.currency_id, quantity=l.quantity, product=l.product_id, partner=f.partner_id)
+                r = l.tax_ids.compute_all(precio, currency=f.currency_id, quantity=l.quantity, product=l.product_id, partner=f.partner_id)
 
-                linea['base'] += r['base']
-                totales[tipo_linea]['total'] += r['base']
-                if len(l.invoice_line_tax_ids) > 0:
-                    linea[tipo_linea] += r['base']
-                    totales[tipo_linea]['neto'] += r['base']
+                linea['base'] += r['total_excluded']
+                totales[tipo_linea]['total'] += r['total_excluded']
+                if len(l.tax_ids) > 0:
+                    linea[tipo_linea] += r['total_excluded']
+                    totales[tipo_linea]['neto'] += r['total_excluded']
                     for i in r['taxes']:
                         if i['id'] == datos['impuesto_id'][0]:
                             linea['iva'] += i['amount']
@@ -99,8 +100,8 @@ class ReporteCompras(models.AbstractModel):
                             linea[f.tipo_gasto+'_exento'] += i['amount']
                             totales[tipo_linea]['exento'] += i['amount']
                 else:
-                    linea[tipo_linea+'_exento'] += r['base']
-                    totales[tipo_linea]['exento'] += r['base']
+                    linea[tipo_linea+'_exento'] += r['total_excluded']
+                    totales[tipo_linea]['exento'] += r['total_excluded']
 
                 linea['total'] += precio * l.quantity
 
@@ -135,6 +136,9 @@ class ReporteCompras(models.AbstractModel):
     def get_report_values(self, docids, data=None):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_ids', []))
+
+        if len(data['form']['diarios_id']) == 0:
+            raise UserError("Por favor ingrese al menos un diario.")
 
         diario = self.env['account.journal'].browse(data['form']['diarios_id'][0])
 
