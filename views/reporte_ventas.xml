@@ -147,7 +147,7 @@
                                         <span t-esc="result['totales']['compra']['iva_retenido'] + result['totales']['servicio']['iva_retenido']  + result['totales']['importacion']['iva_retenido']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                        <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['iva_retenido'] + result['totales']['servicio']['iva_retenido']  + result['totales']['importacion']['iva_retenido']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -202,7 +202,7 @@
                             </tr>
                             <tr>
                                 <td><strong>TOTAL DE VENTAS</strong></td>
-                                <td class="text-right"><span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                <td class="text-right"><span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['iva_retenido'] + result['totales']['servicio']['iva_retenido']  + result['totales']['importacion']['iva_retenido']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
                             </tr>
                         </table>
 
@@ -297,7 +297,7 @@
                                         <span t-esc="result['totales']['compra']['neto'] + result['totales']['servicio']['neto']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                        <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['iva_retenido'] + result['totales']['servicio']['iva_retenido']  + result['totales']['importacion']['iva_retenido']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
@@ -346,7 +346,7 @@
                             </tr>
                             <tr>
                                 <td><strong>TOTAL VENTAS DEL MES</strong></td>
-                                <td class="text-right"><span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
+                                <td class="text-right"><span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['iva_retenido'] + result['totales']['servicio']['iva_retenido']  + result['totales']['importacion']['iva_retenido']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/></td>
                             </tr>
                             <tr>
                                 <td><strong>VENTAS A CUENTAS DE TERCEROS</strong></td>
