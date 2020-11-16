@@ -3,6 +3,10 @@
 from odoo import models, fields, api, _
 import logging
 
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    tipo_gasto = fields.Selection([('compra', 'Compra/Bien'), ('servicio', 'Servicio'), ('importacion', 'Importación/Exportación'), ('combustible', 'Combustible'), ('mixto', 'Mixto')], string="Tipo de Gasto", default="compra")
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
