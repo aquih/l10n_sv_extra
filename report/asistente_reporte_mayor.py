@@ -18,6 +18,7 @@ class AsistenteReporteMayor(models.TransientModel):
             return self.env['account.account'].search([]).ids
 
     cuentas_id = fields.Many2many("account.account", string="Cuentas", required=True, default=_default_cuenta)
+    grupos_id = fields.Many2many("account.group", string="Grupos", required=True)
     folio_inicial = fields.Integer(string="Folio Inicial", required=True, default=1)
     agrupado_por_dia = fields.Boolean(string="Agrupado por dia")
     fecha_desde = fields.Date(string="Fecha Inicial", required=True, default=lambda self: time.strftime('%Y-%m-01'))

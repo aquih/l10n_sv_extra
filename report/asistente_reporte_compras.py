@@ -14,6 +14,7 @@ class AsistenteReporteCompras(models.TransientModel):
 
     diarios_id = fields.Many2many("account.journal", string="Diarios", required=True)
     impuesto_id = fields.Many2one("account.tax", string="Impuesto", required=True)
+    percepcion_id = fields.Many2one("account.tax", string="Percepción", required=True)
     folio_inicial = fields.Integer(string="Folio Inicial", required=True, default=1)
     fecha_desde = fields.Date(string="Fecha Inicial", required=True, default=lambda self: time.strftime('%Y-%m-01'))
     fecha_hasta = fields.Date(string="Fecha Final", required=True, default=lambda self: time.strftime('%Y-%m-%d'))

@@ -12,10 +12,10 @@ class ReporteCompras(models.AbstractModel):
         totales = {}
 
         totales['num_facturas'] = 0
-        totales['compra'] = {'exento':0,'neto':0,'iva':0,'total':0}
-        totales['servicio'] = {'exento':0,'neto':0,'iva':0,'total':0}
-        totales['importacion'] = {'exento':0,'neto':0,'iva':0,'total':0}
-        totales['combustible'] = {'exento':0,'neto':0,'iva':0,'total':0}
+        totales['compra'] = {'exento':0,'neto':0,'iva':0,'percepcion':0,'total':0}
+        totales['servicio'] = {'exento':0,'neto':0,'iva':0,'percepcion':0,'total':0}
+        totales['importacion'] = {'exento':0,'neto':0,'iva':0,'percepcion':0,'total':0}
+        totales['combustible'] = {'exento':0,'neto':0,'iva':0,'percepcion':0,'total':0}
         totales['pequenio_contribuyente'] = 0
 
         journal_ids = [x for x in datos['diarios_id']]
@@ -68,6 +68,7 @@ class ReporteCompras(models.AbstractModel):
                 'importacion_exento': 0,
                 'base': 0,
                 'iva': 0,
+                'percepcion': 0,
                 'total': 0
             }
 
@@ -95,6 +96,10 @@ class ReporteCompras(models.AbstractModel):
                         if i['id'] == datos['impuesto_id'][0]:
                             linea['iva'] += i['amount']
                             totales[tipo_linea]['iva'] += i['amount']
+                            totales[tipo_linea]['total'] += i['amount']
+                        elif i['id'] == datos['percepcion_id'][0]:
+                            linea['percepcion'] += i['amount']
+                            totales[tipo_linea]['percepcion'] += i['amount']
                             totales[tipo_linea]['total'] += i['amount']
                         elif i['amount'] > 0:
                             linea[f.tipo_gasto+'_exento'] += i['amount']
