@@ -8,9 +8,12 @@ class ReporteMayor(models.AbstractModel):
 
     def retornar_saldo_inicial_todos_anios(self, cuenta, fecha_desde):
         saldo_inicial = 0
-        self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber '\
-        'from account_move_line l join account_account a on(l.account_id = a.id)'\
-        'where a.id = %s and l.date < %s group by a.id, a.code, a.name,l.debit,l.credit', (cuenta,fecha_desde))
+        self.env.cr.execute('select g.id, g.code_prefix as codigo, g.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber from account_move_line l join account_account a on(l.account_id = a.id) join account_group g on(a.group_id = g.id) where g.id = %s and l.date < %s group by g.id, g.code_prefix, g.name, l.debit, l.credit', (cuenta,fecha_desde))
+
+#        self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber '\
+#        'from account_move_line l join account_account a on(l.account_id = a.id)'\
+#        'where a.id = %s and l.date < %s group by a.id, a.code, a.name,l.debit,l.credit', (cuenta,fecha_desde))
+
         for m in self.env.cr.dictfetchall():
             saldo_inicial += m['debe'] - m['haber']
         return saldo_inicial
@@ -18,9 +21,11 @@ class ReporteMayor(models.AbstractModel):
     def retornar_saldo_inicial_inicio_anio(self, cuenta, fecha_desde):
         saldo_inicial = 0
         fecha = fields.Date.from_string(fecha_desde)
-        self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber '\
-        'from account_move_line l join account_account a on(l.account_id = a.id)'\
-        'where a.id = %s and l.date < %s and l.date >= %s group by a.id, a.code, a.name,l.debit,l.credit', (cuenta,fecha_desde,fecha.strftime('%Y-1-1')))
+        self.env.cr.execute('select g.id, g.code_prefix as codigo, g.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber from account_move_line l join account_account a on(l.account_id = a.id) join account_group g on(a.group_id = g.id) where g.id = %s and l.date < %s and l.date >= %s group by g.id, g.code_prefix, g.name, l.debit, l.credit', (cuenta,fecha_desde,fecha.strftime('%Y-1-1')))
+
+#        self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, sum(l.debit) as debe, sum(l.credit) as haber '\
+#        'from account_move_line l join account_account a on(l.account_id = a.id)'\
+#        'where a.id = %s and l.date < %s and l.date >= %s group by a.id, a.code, a.name,l.debit,l.credit', (cuenta,fecha_desde,fecha.strftime('%Y-1-1')))
         for m in self.env.cr.dictfetchall():
             saldo_inicial += m['debe'] - m['haber']
         return saldo_inicial
@@ -42,11 +47,14 @@ class ReporteMayor(models.AbstractModel):
 
         accounts_str = ','.join([str(x) for x in datos['cuentas_id']])
         if datos['agrupado_por_dia']:
-            self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, l.date as fecha, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber ' \
-                'from account_move_line l join account_account a on(l.account_id = a.id)' \
-                'join account_account_type t on (t.id = a.user_type_id)' \
-                'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name, l.date, t.include_initial_balance ORDER BY a.code',
+            self.env.cr.execute('select g.id, g.code_prefix as codigo, g.name as cuenta, l.date as fecha, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber from account_move_line l join account_account a on(l.account_id = a.id) join account_account_type t on (t.id = a.user_type_id) join account_group g on(a.group_id = g.id) where g.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by g.id, g.code_prefix, g.name, l.date, t.include_initial_balance ORDER BY g.code_prefix',
             (datos['fecha_desde'], datos['fecha_hasta']))
+
+#            self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, l.date as fecha, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber ' \
+#                'from account_move_line l join account_account a on(l.account_id = a.id)' \
+#                'join account_account_type t on (t.id = a.user_type_id)' \
+#                'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name, l.date, t.include_initial_balance ORDER BY a.code',
+#            (datos['fecha_desde'], datos['fecha_hasta']))
 
             for r in self.env.cr.dictfetchall():
                 totales['debe'] += r['debe']
@@ -92,11 +100,14 @@ class ReporteMayor(models.AbstractModel):
 
             lineas = cuentas_agrupadas.values()
         else:
-            self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber ' \
-            	'from account_move_line l join account_account a on(l.account_id = a.id)' \
-            	'join account_account_type t on (t.id = a.user_type_id)' \
-            	'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name,t.include_initial_balance ORDER BY a.code',
+            self.env.cr.execute('select g.id, g.code_prefix as codigo, g.name as cuenta, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber from account_move_line l join account_account a on(l.account_id = a.id) join account_account_type t on (t.id = a.user_type_id) join account_group g on(a.group_id = g.id) where g.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by g.id, g.code_prefix, g.name,t.include_initial_balance ORDER BY g.code_prefix',
             (datos['fecha_desde'], datos['fecha_hasta']))
+
+#            self.env.cr.execute('select a.id, a.code as codigo, a.name as cuenta, t.include_initial_balance as balance_inicial, sum(l.debit) as debe, sum(l.credit) as haber ' \
+#            	'from account_move_line l join account_account a on(l.account_id = a.id)' \
+#            	'join account_account_type t on (t.id = a.user_type_id)' \
+#            	'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name,t.include_initial_balance ORDER BY a.code',
+#            (datos['fecha_desde'], datos['fecha_hasta']))
 
             for r in self.env.cr.dictfetchall():
                 totales['debe'] += r['debe']
