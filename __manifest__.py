@@ -13,6 +13,7 @@
         'views/reporte_ventas.xml',
         'views/reporte_compras.xml',
         'views/reporte_mayor.xml',
+        'views/reporte_kardex.xml',
         'views/report.xml',
 #        'security/ir.model.access.csv',
     ],
