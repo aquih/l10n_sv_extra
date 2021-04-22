@@ -130,5 +130,38 @@
         <menuitem action="window_reporte_mayor" id="menu_asistente_reporte_mayor" parent="menu_informes"/>
         <report id="action_reporte_mayor" model="l10n_sv_extra.asistente_reporte_mayor" string="Libro Mayor" report_type="qweb-pdf" name="l10n_sv_extra.reporte_mayor" file="l10n_sv_extra.reporte_mayor"/>
 
+        <record id="kardex_asistente_kardex" model="ir.ui.view">
+            <field name="name">kardex_asistente_kardex</field>
+            <field name="model">l10n_sv_extra.asistente_kardex</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Seleccione cuenta y rango de fecha">
+                    <group>
+                        <group>
+                            <field name="ubicacion_id"/>
+                            <field name="name_excel" invisible="1"/>
+                            <field name="archivo_excel" readonly="1" filename="name_excel"/>
+                        </group>
+                        <group>
+                            <field name="fecha_desde"/>
+                            <field name="fecha_hasta"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="producto_ids"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Reporte PDF" type="object" class="oe_highlight"/>
+                        o
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="window_reporte_kardex" name="Kardex" res_model="l10n_sv_extra.asistente_kardex" binding_model="product.product" view_mode="form" target="new"/>
+        <menuitem action="window_reporte_kardex" id="menu_asistente_kardex" parent="stock.menu_warehouse_report"/>
+        <report id="action_reporte_kardex" model="l10n_sv_extra.asistente_kardex" string="Kardex" report_type="qweb-pdf" name="l10n_sv_extra.reporte_kardex" file="l10n_sv_extra.reporte_kardex"/>
+
     </data>
 </odoo>

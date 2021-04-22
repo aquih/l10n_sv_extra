@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="reporte_kardex">
+        <t t-call="web.html_container">
+            <t t-set="data_report_margin_top" t-value="20"/>
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/><br/>
+                    REGISTRO DE CONTROL DE INVENTARIOS (Kardex)<br/></p>
+                    <br/><br/>
+
+                    <table style="width:300px">
+                        <tr>
+                            <td style="width:75px">Período:</td>
+                            <td style="width:225px"><span t-esc="data['fecha_desde']" t-options="{'widget': 'date'}"/> - <span t-esc="data['fecha_hasta']" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr>
+                            <td>NIT:</td>
+                            <td><span t-field="user.company_id.partner_id.vat"/></td>
+                        </tr>
+                        <tr>
+                            <td>NRC:</td>
+                            <td><span t-field="user.company_id.partner_id.numero_registro"/></td>
+                        </tr>
+                    </table>
+
+                    <t t-foreach="data['producto_ids']" t-as="product_id">
+                        <t t-set="result" t-value="lineas(data, product_id)"/>
+                        <div class="row mt32">
+                            <div class="col-xs-3">
+                                <strong>Ubicación:</strong><br/>
+                                <span t-esc="data['ubicacion_id'][1]"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Producto:</strong><br/>
+                                <span t-esc="result['producto']"/>
+                            </div>
+                        </div>
+                        <div class="row mb32">
+                            <div class="col-xs-3">
+                                <strong>Inicial:</strong><br/>
+                                <span t-esc="result['totales']['inicio']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Entradas:</strong><br/>
+                                <span t-esc="result['totales']['entrada']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Salidas:</strong><br/>
+                                <span t-esc="result['totales']['salida']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Final:</strong><br/>
+                                <span t-esc="result['totales']['inicio']+result['totales']['entrada']+result['totales']['salida']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                            </div>
+                        </div>
+
+                        <table style="border:1px solid black;margin:0px auto 0px auto;width:1200px;font-size:11px;">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Corr.</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Fecha</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Tipo</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Documento</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Bodega</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Empresa</center></strong></th>
+                                    <th colspan="3" style="border:1px solid black;width:80px"><strong><center>Entradas</center></strong></th>
+                                    <th colspan="3" style="border:1px solid black;width:80px"><strong><center>Salidas</center></strong></th>
+                                    <th colspan="3" style="border:1px solid black;width:80px"><strong><center>Saldos</center></strong></th>
+                                </tr>
+                                <tr>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Cantidad</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>unitario US$</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>total US$</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Cantidad</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>unitario US$</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>total US$</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Cantidad</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>unitario US$</center></strong></th>
+                                    <th style="border:1px solid black;width:80px"><strong><center>Costo<br/>total US$</center></strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="result['lineas']" t-as="l">
+                                    <td><center><span t-esc="l['correlativo']"/></center></td>
+                                    <td><span t-esc="l['fecha']"/></td>
+                                    <td><span t-esc="l['tipo']"/></td>
+                                    <td><span t-esc="l['documento']"/></td>
+                                    <td></td>
+                                    <td><span t-esc="l['empresa']"/></td>
+                                    <td><span t-esc="l['entrada']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['entrada_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['entrada_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['salida']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['salida_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['salida_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['saldo']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['saldo_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td><span t-esc="l['saldo_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
