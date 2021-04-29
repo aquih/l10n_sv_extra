@@ -59,10 +59,10 @@
                         <table style="border:1px solid black;margin:0px auto 0px auto;width:1200px;font-size:11px;">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Corr.</center></strong></th>
-                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Fecha</center></strong></th>
-                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Tipo</center></strong></th>
-                                    <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Documento</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:40px"><strong><center><br/>Corr.</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:120px"><strong><center><br/>Fecha</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:70px"><strong><center><br/>Tipo</center></strong></th>
+                                    <th rowspan="2" style="border:1px solid black;width:90px"><strong><center><br/>Documento</center></strong></th>
                                     <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Bodega</center></strong></th>
                                     <th rowspan="2" style="border:1px solid black;width:80px"><strong><center><br/>Empresa</center></strong></th>
                                     <th colspan="3" style="border:1px solid black;width:80px"><strong><center>Entradas</center></strong></th>
@@ -89,15 +89,15 @@
                                     <td><span t-esc="l['documento']"/></td>
                                     <td></td>
                                     <td><span t-esc="l['empresa']"/></td>
-                                    <td><span t-esc="l['entrada']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['entrada_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['entrada_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['salida']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['salida_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['salida_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['saldo']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['saldo_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
-                                    <td><span t-esc="l['saldo_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-center"><span t-esc="l['entrada']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['entrada_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['entrada_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-center"><span t-esc="l['salida']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['salida_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['salida_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-center"><span t-esc="l['saldo']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['saldo_costo_unitario']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
+                                    <td class="text-right"><span t-esc="l['saldo_costo_total']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/></td>
                                 </tr>
                             </tbody>
                         </table>

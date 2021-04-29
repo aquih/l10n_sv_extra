@@ -48,7 +48,6 @@ class ReporteKardex(models.AbstractModel):
         lineas = []
         correlativo = 1
         movimientos = self.env['stock.move'].search([('product_id','=',producto.id), ('date','>=',datos['fecha_desde']), ('date','<=',datos['fecha_hasta']), ('state','=','done'), '|', ('location_id','=',datos['ubicacion_id'][0]), ('location_dest_id','=',datos['ubicacion_id'][0])], order = 'date')
-        logging.getLogger('movimientos').warn(movimientos)
         for m in movimientos:
 
             detalle = {
@@ -83,9 +82,7 @@ class ReporteKardex(models.AbstractModel):
                 ('company_id', '=', m.company_id.id),
                 ('create_date', '<=', m.date),
             ]
-            logging.getLogger('domain').warn(domain)
             groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
-            logging.getLogger('groups').warn(groups)
             costo = 0
             for group in groups:
                 valor = self.env.company.currency_id.round(group['value'])
@@ -120,7 +117,6 @@ class ReporteKardex(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
-        logging.getLogger('bbbb').warn(data['form'])
         return  {
             'doc_ids': self.ids,
             'doc_model': self.model,
