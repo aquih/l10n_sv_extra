@@ -130,12 +130,14 @@
         <menuitem action="window_reporte_mayor" id="menu_asistente_reporte_mayor" parent="menu_informes"/>
         <report id="action_reporte_mayor" model="l10n_sv_extra.asistente_reporte_mayor" string="Libro Mayor" report_type="qweb-pdf" name="l10n_sv_extra.reporte_mayor" file="l10n_sv_extra.reporte_mayor"/>
 
+
         <record id="kardex_asistente_kardex" model="ir.ui.view">
             <field name="name">kardex_asistente_kardex</field>
             <field name="model">l10n_sv_extra.asistente_kardex</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Seleccione cuenta y rango de fecha">
+
                     <group>
                         <group>
                             <field name="ubicacion_id"/>
@@ -159,8 +161,14 @@
             </field>
         </record>
 
-        <act_window id="window_reporte_kardex" name="Kardex" res_model="l10n_sv_extra.asistente_kardex" binding_model="product.product" view_mode="form" target="new"/>
-        <menuitem action="window_reporte_kardex" id="menu_asistente_kardex" parent="stock.menu_warehouse_report"/>
+        <record model="ir.actions.act_window" id="action_kardex_wizard">
+            <field name="name">Kardex</field>
+            <field name="res_model">l10n_sv_extra.asistente_kardex</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_kardex_wizard" id="menu_wizard_kardex_wizard" name="Kardex" parent="stock.menu_warehouse_report"/>
         <report id="action_reporte_kardex" model="l10n_sv_extra.asistente_kardex" string="Kardex" report_type="qweb-pdf" name="l10n_sv_extra.reporte_kardex" file="l10n_sv_extra.reporte_kardex"/>
 
     </data>
