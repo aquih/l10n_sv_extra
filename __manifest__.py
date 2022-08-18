@@ -15,7 +15,7 @@
         'views/reporte_mayor.xml',
         'views/reporte_kardex.xml',
         'views/report.xml',
-#        'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'installable': True,
