@@ -87,7 +87,8 @@ class ReporteKardex(models.AbstractModel):
             for group in groups:
                 valor = self.env.company.currency_id.round(group['value'])
                 cantidad = group['quantity']
-                costo = valor / cantidad
+                if cantidad != 0:
+                    costo = valor / cantidad
 
             detalle['costo'] = costo
 
