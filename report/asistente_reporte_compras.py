@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import time
 from datetime import datetime
-#import xlwt
+import xlsxwriter
 import base64
 import io
 import logging
@@ -41,87 +41,69 @@ class AsistenteReporteCompras(models.TransientModel):
             res = self.env['report.l10n_sv_extra.reporte_compras'].lineas(dict)
             lineas = res['lineas']
             totales = res['totales']
-            libro = xlwt.Workbook()
-            hoja = libro.add_sheet('reporte')
-
-            xlwt.add_palette_colour("custom_colour", 0x21)
-            libro.set_colour_RGB(0x21, 200, 200, 200)
-            estilo = xlwt.easyxf('pattern: pattern solid, fore_colour custom_colour')
-            hoja.write(0, 0, 'LIBRO DE COMPRAS Y SERVICIOS')
-            hoja.write(2, 0, 'NUMERO DE IDENTIFICACION TRIBUTARIA')
-            hoja.write(2, 1, w.diarios_id[0].company_id.partner_id.vat)
-            hoja.write(3, 0, 'NOMBRE COMERCIAL')
-            hoja.write(3, 1, w.diarios_id[0].company_id.partner_id.name)
-            hoja.write(2, 3, 'DOMICILIO FISCAL')
-            hoja.write(2, 4, w.diarios_id[0].company_id.partner_id.street)
-            hoja.write(3, 3, 'REGISTRO DEL')
-            hoja.write(3, 4, str(w.fecha_desde) + ' al ' + str(w.fecha_hasta))
-
-            y = 5
-
-            hoja.write(y, 6, 'Compra')
-            hoja.write(y, 7, 'exenta')
-            hoja.write(y, 8, 'Compra')
-            hoja.write(y, 9, 'gravada')
+            
+            f = io.BytesIO()
+            libro = xlsxwriter.Workbook(f)
+            hoja = libro.add_worksheet('Reporte')
+            
+            hoja.write(0, 0, w.diarios_id[0].company_id.partner_id.name)
+            hoja.write(1, 0, 'LIBRO VENTAS COMPRAS')
+            hoja.write(3, 0, 'NIT {}'.format(w.diarios_id[0].company_id.partner_id.vat))
+            hoja.write(4, 0, 'NRC {}'.format(w.diarios_id[0].company_id.partner_id.numero_registro))
+            hoja.write(5, 0, 'MES {} {}'.format(['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'][w.fecha_desde.month-1], w.fecha_desde.day))
 
             y = 6
-            hoja.write(y, 0, 'Correlativo')
-            hoja.write(y, 1, 'Fecha')
-            hoja.write(y, 2, '# Comprobante')
+            hoja.write(y, 0, 'NO. COR.')
+            hoja.write(y, 1, 'FECHA')
+            hoja.write(y, 2, 'NO. DE COMPROB.')
             hoja.write(y, 3, 'NIT')
-            hoja.write(y, 4, 'Registro')
-            hoja.write(y, 5, 'Cliente')
-            hoja.write(y, 6, 'Interna')
-            hoja.write(y, 7, 'Importación')
-            hoja.write(y, 8, 'Interna')
-            hoja.write(y, 9, 'Importación')
+            hoja.write(y, 4, 'NÚMERO DE REGISTRO')
+            hoja.write(y, 5, 'NOMBRE DEL PROVEEDOR')
+            hoja.write(y, 6, 'COMPRA EXENTA LOCAL')
+            hoja.write(y, 7, 'COMPRA EXENTA IMPORT')
+            hoja.write(y, 8, 'COMPRA GRAVADA LOCAL')
+            hoja.write(y, 9, 'COMPRA GRAVADA IMPORT')
             hoja.write(y, 10, 'IVA')
-            hoja.write(y, 11, 'Total')
-            hoja.write(y, 12, 'Retención')
-            hoja.write(y, 13, 'Retención 2%')
-            hoja.write(y, 14, 'IVA terceros')
+            hoja.write(y, 11, 'PERCEPCION')
+            hoja.write(y, 12, 'RETENCIÓN')
+            hoja.write(y, 13, 'TOTAL COMPRAS')
+            hoja.write(y, 14, 'IVA TERCEROS')
 
             correlativo = 1
             mes_actual = ''
             for linea in lineas:
-                if mes_actual != datetime.strftime(linea['fecha'], '%Y-%m'):
-                    mes_actual = datetime.strftime(linea['fecha'], '%Y-%m')
-                    correlativo = 1
-
                 y += 1
-                hoja.write(y, 0, correlativo)
-                correlativo += 1
+                hoja.write(y, 0, linea['correlativo'])
                 hoja.write(y, 1, str(linea['fecha']))
                 hoja.write(y, 2, linea['numero'])
-                hoja.write(y, 3, linea['proveedor']['vat'])
-                hoja.write(y, 4, linea['proveedor']['numero_registro'])
-                hoja.write(y, 5, linea['proveedor']['name'])
-                hoja.write(y, 6, '-')
-                hoja.write(y, 7, '-')
-                hoja.write(y, 8, linea['compra'])
+                hoja.write(y, 3, linea['proveedor'].vat)
+                hoja.write(y, 4, linea['proveedor'].numero_registro)
+                hoja.write(y, 5, linea['proveedor'].name)
+                hoja.write(y, 6, 0)
+                hoja.write(y, 7, 0)
+                hoja.write(y, 8, linea['compra'] + linea['servicio'])
                 hoja.write(y, 9, linea['importacion'])
                 hoja.write(y, 10, linea['iva'])
-                hoja.write(y, 11, linea['total'])
+                hoja.write(y, 11, linea['percepcion'])
                 hoja.write(y, 12, linea['compra_exento'])
-                hoja.write(y, 13, '-')
-                hoja.write(y, 14, '-')
+                hoja.write(y, 13, linea['total'])
+                hoja.write(y, 14, 0)
 
             y += 1
-            hoja.write(y, 3, 'Totales')
-            hoja.write(y, 6, '-')
-            hoja.write(y, 7, '-')
-            hoja.write(y, 8, totales['compra']['neto'])
+            hoja.write(y, 5, 'Totales')
+            hoja.write(y, 6, 0)
+            hoja.write(y, 7, 0)
+            hoja.write(y, 8, totales['compra']['neto'] + totales['servicio']['neto'])
             hoja.write(y, 9, totales['importacion']['neto'])
             hoja.write(y, 10, totales['compra']['iva'] + totales['servicio']['iva'] + totales['combustible']['iva'] + totales['importacion']['iva'])
-            hoja.write(y, 11, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'])
+            hoja.write(y, 11, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
             hoja.write(y, 12, totales['compra']['exento'])
-            hoja.write(y, 13, '-')
-            hoja.write(y, 14, '-')
+            hoja.write(y, 13, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
+            hoja.write(y, 14, 0)
 
-            f = io.BytesIO()
-            libro.save(f)
+            libro.close()
             datos = base64.b64encode(f.getvalue())
-            self.write({'archivo':datos, 'name':'libro_de_compras.xls'})
+            self.write({'archivo':datos, 'name':'libro_de_compras.xlsx'})
 
         return {
             'view_type': 'form',

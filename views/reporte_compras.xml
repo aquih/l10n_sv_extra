@@ -20,22 +20,21 @@
                 <table style="width:900px;margin:0px auto 0px auto">
                     <thead>
                         <tr style="font-size:10px; border: 1px solid black">
-                            <th style="width:40px; border: 1px solid black" class="text-center">No.<br/>Cor.</th>
-                            <th style="width:60px; border: 1px solid black" class="text-center">Fecha</th>
-                            <th style="width:50px; border: 1px solid black" class="text-center">No. de<br/>comprob.</th>
+                            <th style="width:40px; border: 1px solid black" class="text-center">NO.<br/>COR.</th>
+                            <th style="width:60px; border: 1px solid black" class="text-center">FECHA</th>
+                            <th style="width:50px; border: 1px solid black" class="text-center">NO. DE<br/>COMPROB.</th>
                             <th style="width:48px; border: 1px solid black" class="text-center">NIT</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Número de<br/>registro</th>
-                            <th style="width:160px; border: 1px solid black" class="text-center">Nombre del proveedor</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Compra<br/>exenta<br/>intern</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Compra<br/>exenta<br/>import</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Compra<br/>gravada<br/>intern</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Compra<br/>gravada<br/>import</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">NÚMERO DE<br/>REGISTRO</th>
+                            <th style="width:160px; border: 1px solid black" class="text-center">NOMBRE DEL PROVEEDOR</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">COMPRA<br/>EXENTA<br/>LOCAL</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">COMPRA<br/>EXENTA<br/>IMPORT</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">COMPRA<br/>GRAVADA<br/>LOCAL</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">COMPRA<br/>GRAVADA<br/>IMPORT</th>
                             <th style="width:48px; border: 1px solid black" class="text-center">IVA</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Percepcion</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Retención</th>
-                            <th style="width:30px; border: 1px solid black" class="text-center">Retención 2%</th>
-                            <th style="width:48px; border: 1px solid black" class="text-center">Total<br/>c ompras</th>
-                            <th style="width:30px; border: 1px solid black" class="text-center">IVA<br/>terceros</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">PERCEPCION</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">RETENCIÓN</th>
+                            <th style="width:48px; border: 1px solid black" class="text-center">TOTAL<br/>COMPRAS</th>
+                            <th style="width:30px; border: 1px solid black" class="text-center">IVA<br/>TERCEROS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,9 +79,6 @@
                                 <span t-esc="l['compra_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
-                            </td>
-                            <td class="text-right">
                                 <span t-esc="l['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                             </td>
                             <td class="text-right">
@@ -123,9 +119,6 @@
                             </td>
                             <td class="text-right">
                                 <span t-esc="result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
-                            </td>
-                            <td class="text-right">
-                                <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                             </td>
                             <td class="text-right">
                                 <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['combustible']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>

@@ -63,7 +63,6 @@ class AsistenteReporteVentas(models.TransientModel):
 
             hoja.write(0, 0, w.diarios_id[0].company_id.partner_id.name)
             hoja.write(1, 0, 'LIBRO VENTAS CONTRIBUYENTES' if resumido == False else 'LIBRO VENTAS CONSUMIDOR FINAL')
-            hoja.write(2, 0, 'Desde {} Hasta {}'.format(w.fecha_desde, w.fecha_hasta))
             hoja.write(3, 0, 'NIT {}'.format(w.diarios_id[0].company_id.partner_id.vat))
             hoja.write(4, 0, 'NRC {}'.format(w.diarios_id[0].company_id.partner_id.numero_registro))
             hoja.write(5, 0, 'MES {} {}'.format(['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'][w.fecha_desde.month-1], w.fecha_desde.day))
@@ -100,7 +99,7 @@ class AsistenteReporteVentas(models.TransientModel):
                 y += 1
                 if resumido == False:
                     hoja.write(y, 0, linea['correlativo'])
-                    hoja.write(y, 1, linea['fecha'])
+                    hoja.write(y, 1, str(linea['fecha']))
                     hoja.write(y, 2, linea['numero'])
                     hoja.write(y, 3, linea['serie'])
                     hoja.write(y, 4, linea['cliente'])
