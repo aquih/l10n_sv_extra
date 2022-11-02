@@ -3,7 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import time
-#import xlwt
+import xlsxwriter
 import base64
 import io
 
@@ -38,7 +38,13 @@ class AsistenteReporteVentas(models.TransientModel):
         }
         return self.env.ref('l10n_sv_extra.action_reporte_ventas').report_action(self, data=data)
 
-    def print_report_excel(self):
+    def print_report_excel_contribuyente(self):
+        return self.print_report_excel(False)
+    
+    def print_report_excel_consumidor_final(self):
+        return self.print_report_excel(True)
+
+    def print_report_excel(self, resumido):
         for w in self:
             dict = {}
             dict['fecha_hasta'] = w['fecha_hasta']
@@ -50,108 +56,179 @@ class AsistenteReporteVentas(models.TransientModel):
             res = self.env['report.l10n_sv_extra.reporte_ventas'].lineas(dict)
             lineas = res['lineas']
             totales = res['totales']
-            libro = xlwt.Workbook()
-            hoja = libro.add_sheet('reporte')
+            
+            f = io.BytesIO()
+            libro = xlsxwriter.Workbook(f)
+            hoja = libro.add_worksheet('Reporte')
 
-            xlwt.add_palette_colour("custom_colour", 0x21)
-            libro.set_colour_RGB(0x21, 200, 200, 200)
-            estilo = xlwt.easyxf('pattern: pattern solid, fore_colour custom_colour')
-            hoja.write(0, 0, 'LIBRO DE VENTAS Y SERVICIOS')
-            hoja.write(2, 0, 'NUMERO DE IDENTIFICACION TRIBUTARIA')
-            hoja.write(2, 1, w.diarios_id[0].company_id.partner_id.vat)
-            hoja.write(3, 0, 'NOMBRE COMERCIAL')
-            hoja.write(3, 1, w.diarios_id[0].company_id.partner_id.name)
-            hoja.write(2, 3, 'DOMICILIO FISCAL')
-            hoja.write(2, 4, w.diarios_id[0].company_id.partner_id.street)
-            hoja.write(3, 3, 'REGISTRO DEL')
-            hoja.write(3, 4, w.fecha_desde + ' al ' + w.fecha_hasta)
+            hoja.write(0, 0, w.diarios_id[0].company_id.partner_id.name)
+            hoja.write(1, 0, 'LIBRO VENTAS CONTRIBUYENTES' if resumido == False else 'LIBRO VENTAS CONSUMIDOR FINAL')
+            hoja.write(2, 0, 'Desde {} Hasta {}'.format(w.fecha_desde, w.fecha_hasta))
+            hoja.write(3, 0, 'NIT {}'.format(w.diarios_id[0].company_id.partner_id.vat))
+            hoja.write(4, 0, 'NRC {}'.format(w.diarios_id[0].company_id.partner_id.numero_registro))
+            hoja.write(5, 0, 'MES {} {}'.format(['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'][w.fecha_desde.month-1], w.fecha_desde.day))
 
-            y = 5
-            hoja.write(y, 0, 'Tipo')
-            hoja.write(y, 1, 'Fecha')
-            hoja.write(y, 2, 'Doc')
-            hoja.write(y, 3, 'Cliente')
-            hoja.write(y, 4, 'NIT')
-            hoja.write(y, 5, 'Ventas')
-            hoja.write(y, 6, 'Ventas exento')
-            hoja.write(y, 7, 'Servicios')
-            hoja.write(y, 8, 'Servicios exento')
-            hoja.write(y, 9, 'Exportaciones')
-            hoja.write(y, 10, 'IVA')
-            hoja.write(y, 11, 'Total')
+            y = 6
+            if resumido == False:
+                hoja.write(y, 0, 'No. COR.')
+                hoja.write(y, 1, 'FECHA')
+                hoja.write(y, 2, 'NUMERO COMP.')
+                hoja.write(y, 3, 'SERIE')
+                hoja.write(y, 4, 'NOMBRE DEL CLIENTE')
+                hoja.write(y, 5, 'NUMERO DE REGISTRO')
+                hoja.write(y, 6, 'VENTAS NO SUJETAS')
+                hoja.write(y, 7, 'VENTAS EXENTAS')
+                hoja.write(y, 8, 'VENTAS GRAVADAS')
+                hoja.write(y, 9, 'VENTAS EXPOR')
+                hoja.write(y, 10, 'IVA DEBI. FISCAL')
+                hoja.write(y, 11, 'TERCEROS VENTAS')
+                hoja.write(y, 12, 'TERCEROS IVA')
+                hoja.write(y, 13, 'IVA RETENIDO')
+                hoja.write(y, 14, 'TOTAL')
+            else:
+                hoja.write(y, 0, 'DIA')
+                hoja.write(y, 1, 'NUMERO')
+                hoja.write(y, 2, 'VENTAS EXENTAS')
+                hoja.write(y, 3, 'VENTAS NO SUJETAS')
+                hoja.write(y, 4, 'VENTAS GRAVADAS LOCALES')
+                hoja.write(y, 5, 'VENTAS GRAVADAS EXPORTACIONES')
+                hoja.write(y, 6, 'VENTA TOTAL')
+                hoja.write(y, 7, 'VENTA RET. 1%')
+                hoja.write(y, 8, 'VENTA POR CTA. TERCEROS')
 
             for linea in lineas:
                 y += 1
-                hoja.write(y, 0, linea['tipo'])
-                hoja.write(y, 1, linea['fecha'])
-                hoja.write(y, 2, linea['numero'])
-                hoja.write(y, 3, linea['cliente'])
-                hoja.write(y, 4, linea['nit'])
-                hoja.write(y, 5, linea['compra'])
-                hoja.write(y, 6, linea['compra_exento'])
-                hoja.write(y, 7, linea['servicio'])
-                hoja.write(y, 8, linea['servicio_exento'])
-                hoja.write(y, 9, linea['importacion'])
-                hoja.write(y, 10, linea['iva'])
-                hoja.write(y, 11, linea['total'])
+                if resumido == False:
+                    hoja.write(y, 0, linea['correlativo'])
+                    hoja.write(y, 1, linea['fecha'])
+                    hoja.write(y, 2, linea['numero'])
+                    hoja.write(y, 3, linea['serie'])
+                    hoja.write(y, 4, linea['cliente'])
+                    hoja.write(y, 5, linea['numero_registro'])
+                    hoja.write(y, 6, 0)
+                    hoja.write(y, 7, linea['compra_exento'] + linea['servicio_exento'])
+                    hoja.write(y, 8, linea['compra'] + linea['servicio'])
+                    hoja.write(y, 9, linea['importacion'])
+                    hoja.write(y, 10, linea['iva'])
+                    hoja.write(y, 11, 0)
+                    hoja.write(y, 12, 0)
+                    hoja.write(y, 13, linea['iva_retenido'])
+                    hoja.write(y, 14, linea['total'])
+                else:
+                    hoja.write(y, 0, linea['fecha'])
+                    hoja.write(y, 1, linea['numero'])
+                    hoja.write(y, 2, l['compra_exento'] + l['servicio_exento'])
+                    hoja.write(y, 3, 0)
+                    hoja.write(y, 4, l['compra'] + l['servicio'])
+                    hoja.write(y, 5, l['importacion'])
+                    hoja.write(y, 6, l['total'])
+                    hoja.write(y, 7, 0)
+                    hoja.write(y, 8, 0)
 
             y += 1
-            hoja.write(y, 3, 'Totales')
-            hoja.write(y, 5, totales['compra']['neto'])
-            hoja.write(y, 6, totales['compra']['exento'])
-            hoja.write(y, 7, totales['servicio']['neto'])
-            hoja.write(y, 8, totales['servicio']['exento'])
-            hoja.write(y, 9, totales['importacion']['neto'])
-            hoja.write(y, 10, totales['compra']['iva'] + totales['servicio']['iva'] + totales['importacion']['iva'])
-            hoja.write(y, 11, totales['compra']['total'] + totales['servicio']['total'] + totales['importacion']['total'])
+            if resumido == False:
+                hoja.write(y, 5, 'Totales')
+                hoja.write(y, 6, 0)
+                hoja.write(y, 7, totales['compra']['exento'] + totales['servicio']['exento'])
+                hoja.write(y, 8, totales['compra']['neto'] + totales['servicio']['neto'])
+                hoja.write(y, 9, totales['importacion']['neto'])
+                hoja.write(y, 10, totales['compra']['iva'] + totales['servicio']['iva']  + totales['importacion']['iva'])
+                hoja.write(y, 11, 0)
+                hoja.write(y, 12, 0)
+                hoja.write(y, 13, totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido']  + totales['importacion']['iva_retenido'])
+                hoja.write(y, 14, totales['compra']['total'] + totales['servicio']['total'] + totales['importacion']['total'] + totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido']  + totales['importacion']['iva_retenido'])
+            else:
+                hoja.write(y, 1, 'Totales')
+                hoja.write(y, 2, totales['compra']['exento'] + totales['servicio']['exento'])
+                hoja.write(y, 3, 0)
+                hoja.write(y, 4, totales['compra']['neto'] + totales['servicio']['neto'])
+                hoja.write(y, 5, totales['importacion']['neto'])
+                hoja.write(y, 6, totales['compra']['total'] + totales['servicio']['total'] + totales['importacion']['total'] + totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido']  + totales['importacion']['iva_retenido'])
+                hoja.write(y, 7, 0)
+                hoja.write(y, 8, 0)
 
             y += 2
-            hoja.write(y, 0, 'Cantidad de facturas')
-            hoja.write(y, 1, totales['num_facturas'])
-            y += 1
-            hoja.write(y, 0, 'Total credito fiscal')
-            hoja.write(y, 1, totales['compra']['iva'] + totales['servicio']['iva'] + totales['importacion']['iva'])
+            hoja.write(y, 0, 'RESUMEN DE OPERACIONES A CREDITO FISCAL' if resumido == False else 'RESUMEN DE OPERACIONES A CONSUMIDORES FINALES')
+            y += 2
             
-            y += 2
-            hoja.write(y, 3, 'EXENTO')
-            hoja.write(y, 4, 'NETO')
-            hoja.write(y, 5, 'IVA')
-            hoja.write(y, 6, 'TOTAL')
-            y += 1
-            hoja.write(y, 1, 'BIENES')
-            hoja.write(y, 3, totales['compra']['exento'])
-            hoja.write(y, 4, totales['compra']['neto'])
-            hoja.write(y, 5, totales['compra']['iva'])
-            hoja.write(y, 6, totales['compra']['total'])
-            y += 1
-            hoja.write(y, 1, 'SERVICIOS')
-            hoja.write(y, 3, totales['servicio']['exento'])
-            hoja.write(y, 4, totales['servicio']['neto'])
-            hoja.write(y, 5, totales['servicio']['iva'])
-            hoja.write(y, 6, totales['servicio']['total'])
-            y += 1
-            hoja.write(y, 1, 'COMBUSTIBLES')
-            hoja.write(y, 3, totales['combustible']['exento'])
-            hoja.write(y, 4, totales['combustible']['neto'])
-            hoja.write(y, 5, totales['combustible']['iva'])
-            hoja.write(y, 6, totales['combustible']['total'])
-            y += 1
-            hoja.write(y, 1, 'EXPORTACIONES')
-            hoja.write(y, 3, 0)
-            hoja.write(y, 4, totales['importacion']['neto'])
-            hoja.write(y, 5, totales['importacion']['iva'])
-            hoja.write(y, 6, totales['importacion']['total'])
-            y += 1
-            hoja.write(y, 1, 'TOTALES')
-            hoja.write(y, 3, totales['compra']['exento']+totales['servicio']['exento']+totales['combustible']['exento']+0)
-            hoja.write(y, 4, totales['compra']['neto']+totales['servicio']['neto']+totales['combustible']['neto']+totales['importacion']['neto'])
-            hoja.write(y, 5, totales['compra']['iva']+totales['servicio']['iva']+totales['combustible']['iva']+totales['importacion']['iva'])
-            hoja.write(y, 6, totales['compra']['total']+totales['servicio']['total']+totales['combustible']['total']+totales['importacion']['total'])
-
-            f = io.BytesIO()
-            libro.save(f)
+            if resumido == False:
+                hoja.write(y, 0, 'VENTAS NETAS')
+                hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+                y += 1
+                hoja.write(y, 0, 'IVA COMPROBANTES DE CRÉDITO FISCAL')
+                hoja.write(y, 1, totales['compra']['iva'] + totales['servicio']['iva'] + totales['importacion']['iva'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS GRAVADAS')
+                hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL N/C')
+                hoja.write(y, 1, totales['nota_credito'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS EXENTAS')
+                hoja.write(y, 1, totales['compra']['exento'] + totales['servicio']['exento'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS NO SUJETAS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS EXPORTACIÓN')
+                hoja.write(y, 1, totales['importacion']['neto'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE IVA RETENIDO')
+                hoja.write(y, 1, totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido'] + totales['importacion']['iva_retenido'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS A TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'IVA DE VENTAS A TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS A TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTAS')
+                hoja.write(y, 1, totales['compra']['total'] + totales['servicio']['total'] + totales['importacion']['total'] + totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido']  + totales['importacion']['iva_retenido'])
+                y += 1
+            else:
+                hoja.write(y, 0, 'VENTAS NETAS')
+                hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+                y += 1
+                hoja.write(y, 0, '13% IVA')
+                hoja.write(y, 1, totales['compra']['iva'] + totales['servicio']['iva']  + totales['importacion']['iva'])
+                y += 1
+                hoja.write(y, 0, 'RETENCION 1%')
+                hoja.write(y, 1, totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido']  + totales['importacion']['iva_retenido'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS TOTALES GRAVADAS')
+                hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS NETAS')
+                hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS EXENTAS')
+                hoja.write(y, 1, totales['compra']['exento'] + totales['servicio']['exento'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS NO SUJETAS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'VENTAS POR EXPORTACIONES')
+                hoja.write(y, 1, totales['importacion']['neto'])
+                y += 1
+                hoja.write(y, 0, 'TOTAL VENTAS DEL MES')
+                hoja.write(y, 1, totales['compra']['total'] + totales['servicio']['total'] + totales['importacion']['total'] + totales['compra']['iva_retenido'] + totales['servicio']['iva_retenido'] + totales['importacion']['iva_retenido'])
+                y += 1
+                hoja.write(y, 0, 'VENTAS A CUENTAS DE TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'IVA POR VENTA A CUENTA DE TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+                hoja.write(y, 0, 'TOTAL DE VENTA A CUENTA DE TERCEROS')
+                hoja.write(y, 1, 0)
+                y += 1
+            
+            libro.close()
             datos = base64.b64encode(f.getvalue())
-            self.write({'archivo':datos, 'name':'libro_de_ventas.xls'})
+            self.write({'archivo':datos, 'name':'libro_de_ventas.xlsx'})
 
         return {
             'view_type': 'form',

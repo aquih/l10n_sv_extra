@@ -22,7 +22,7 @@ class ReporteVentas(models.AbstractModel):
         journal_ids = [x for x in datos['diarios_id']]
         facturas = self.env['account.move'].search([
             ('state','in',['posted','cancel']),
-            ('type','in',['out_invoice','out_refund']),
+            ('type' if 'type' in self.env['account.move'].fields_get() else 'move_type','in',['out_invoice','out_refund']),
             ('journal_id','in',journal_ids),
             ('date','<=',datos['fecha_hasta']),
             ('date','>=',datos['fecha_desde']),
@@ -43,11 +43,11 @@ class ReporteVentas(models.AbstractModel):
                 tipo_cambio = abs(total / f.amount_total)
 
             tipo = 'FACT'
-            if f.type == 'out_refund':
-                if f.amount_untaxed >= 0:
-                    tipo = 'NC'
-                else:
-                    tipo = 'ND'
+            tipo_interno_factura = f.type if 'type' in f.fields_get() else f.move_type
+            if tipo_interno_factura != 'out_invoice':
+                tipo = 'NC'
+            if f.nota_debito:
+                tipo = 'ND'
 
             numero = f.name or f.numero_viejo or '-',
 

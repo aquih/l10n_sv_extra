@@ -28,9 +28,10 @@
                         <field name="archivo" readonly="1" filename="name"/>
                     </group>
                     <footer>
-                        <button name="print_report_contribuyente" string="Reporte contribuyente" type="object" class="oe_highlight"/>
-                        <button name="print_report_consumidor_final" string="Reporte consumidor final" type="object" class="oe_highlight"/>
-<!--                        <button name="print_report_excel" string="Reporte excel" type="object" class="oe_highlight"/>-->
+                        <button name="print_report_contribuyente" string="Reporte Contribuyente" type="object" class="oe_highlight"/>
+                        <button name="print_report_consumidor_final" string="Reporte Consumidor Final" type="object" class="oe_highlight"/>
+                        <button name="print_report_excel_contribuyente" string="Excel Contribuyente" type="object" class="oe_highlight"/>
+                        <button name="print_report_excel_consumidor_final" string="Excel Consumidor Final" type="object" class="oe_highlight"/>
                         o
                         <button special="cancel" string="Cancel" class="oe_link"/>
                     </footer>
