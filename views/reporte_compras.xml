@@ -129,48 +129,51 @@
                         </tr>
                     </tbody>
                 </table>
-                
                 <br/><br/>
-                <table style="width:700px;margin:0px auto 0px auto">
+                <div class="text-center"><strong>RESUMEN DE COMPRAS</strong></div>
+                <br/>
+                <table style="width:500px;margin:0px auto 0px auto">
                     <tr>
-                        <td style="width:250px"><strong>TOTAL COMPRAS</strong></td>
-                        <td style="width:100px" class="text-right"></td>
-                        <td style="width:250px" class="text-right"></td>
+                        <td style="width:350px"><strong>TOTAL COMPRAS</strong></td>
                         <td style="width:100px" class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>TOTAL N/C</strong></td>
                         <td class="text-right"></td>
-                        <td class="text-right"></td>
-                        <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>COMPRAS GRAVADAS</strong></td>
-                        <td class="text-right"></td>
-                        <td class="text-right"></td>
                         <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>IVA GRAVADO</strong></td>
                         <td class="text-right"></td>
-                        <td>PERCEPCION 1%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PERCEPCION</strong></td>
                         <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>COMPRAS EXENTAS</strong></td>
                         <td class="text-right"></td>
+                    </tr>
+                    <tr>
                         <td><strong>ANT. A CTA. IVA 2%</strong></td>
                         <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>NO SUJETAS</strong></td>
                         <td class="text-right"></td>
+                    </tr>
+                    <tr>
                         <td><strong>IVA TERCEROS</strong></td>
                         <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td><strong>TOTAL DE COMPRAS</strong></td>
                         <td class="text-right"></td>
+                    </tr>
+                    <tr>
                         <td><strong>TOTAL DE IMPUESTOS</strong></td>
                         <td class="text-right"></td>
                     </tr>

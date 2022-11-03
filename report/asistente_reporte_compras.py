@@ -88,8 +88,8 @@ class AsistenteReporteCompras(models.TransientModel):
                 hoja.write(y, 12, linea['compra_exento'])
                 hoja.write(y, 13, linea['total'])
                 hoja.write(y, 14, 0)
-
-            y += 1
+            
+            y += 1    
             hoja.write(y, 5, 'Totales')
             hoja.write(y, 6, 0)
             hoja.write(y, 7, 0)
@@ -101,6 +101,44 @@ class AsistenteReporteCompras(models.TransientModel):
             hoja.write(y, 13, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
             hoja.write(y, 14, 0)
 
+            y += 2
+            hoja.write(y, 0, 'RESUMEN DE COMPRAS')
+            y += 2
+            
+            hoja.write(y, 0, 'TOTAL COMPRAS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'TOTAL N/C')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'COMPRAS GRAVADAS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'VA GRAVADO')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'PERCEPCION')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'COMPRAS EXENTAS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'ANT. A CTA. IVA 2%')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'NO SUJETAS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'IVA TERCEROS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'TOTAL DE COMPRAS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'TOTAL DE IMPUESTOS')
+            hoja.write(y, 1, 0)
+            y += 1
+            
             libro.close()
             datos = base64.b64encode(f.getvalue())
             self.write({'archivo':datos, 'name':'libro_de_compras.xlsx'})
