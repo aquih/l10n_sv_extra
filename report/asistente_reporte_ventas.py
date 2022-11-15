@@ -39,9 +39,11 @@ class AsistenteReporteVentas(models.TransientModel):
         return self.env.ref('l10n_sv_extra.action_reporte_ventas').report_action(self, data=data)
 
     def print_report_excel_contribuyente(self):
+        self.resumido = False
         return self.print_report_excel(False)
     
     def print_report_excel_consumidor_final(self):
+        self.resumido = True
         return self.print_report_excel(True)
 
     def print_report_excel(self, resumido):
@@ -50,6 +52,7 @@ class AsistenteReporteVentas(models.TransientModel):
             dict['fecha_hasta'] = w['fecha_hasta']
             dict['fecha_desde'] = w['fecha_desde']
             dict['impuesto_id'] = [w.impuesto_id.id, w.impuesto_id.name]
+            dict['iva_retenido_id'] = [w.iva_retenido_id.id, w.iva_retenido_id.name]
             dict['diarios_id'] =[x.id for x in w.diarios_id]
             dict['resumido'] = w['resumido']
             
@@ -116,11 +119,11 @@ class AsistenteReporteVentas(models.TransientModel):
                 else:
                     hoja.write(y, 0, linea['fecha'])
                     hoja.write(y, 1, linea['numero'])
-                    hoja.write(y, 2, l['compra_exento'] + l['servicio_exento'])
+                    hoja.write(y, 2, linea['compra_exento'] + linea['servicio_exento'])
                     hoja.write(y, 3, 0)
-                    hoja.write(y, 4, l['compra'] + l['servicio'])
-                    hoja.write(y, 5, l['importacion'])
-                    hoja.write(y, 6, l['total'])
+                    hoja.write(y, 4, linea['compra'] + linea['servicio'])
+                    hoja.write(y, 5, linea['importacion'])
+                    hoja.write(y, 6, linea['total'])
                     hoja.write(y, 7, 0)
                     hoja.write(y, 8, 0)
 

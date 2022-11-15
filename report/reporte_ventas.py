@@ -44,25 +44,13 @@ class ReporteVentas(models.AbstractModel):
 
             tipo = 'FACT'
 
-            numero = f.name or f.numero_viejo or '-',
-
-            # Por si es un diario de rango de facturas
-            if f.journal_id.facturas_por_rangos:
-                numero = f.name
-
-            # Por si usa factura electrónica
-            if 'firma_gface' in f.fields_get() and f.firma_gface:
-                numero = f.name
-
-            # Por si usa tickets
-            if 'requiere_resolucion' in f.journal_id.fields_get() and f.journal_id.requiere_resolucion:
-                numero = f.name
+            numero = f.name or '-'
 
             if f.name:
                 serie = f.name#[0:9]
             else:
                 serie = ''
-
+                
             linea = {
                 'correlativo': correlativo,
                 'serie': serie,

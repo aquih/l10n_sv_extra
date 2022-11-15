@@ -36,6 +36,7 @@ class AsistenteReporteCompras(models.TransientModel):
             dict['fecha_hasta'] = w['fecha_hasta']
             dict['fecha_desde'] = w['fecha_desde']
             dict['impuesto_id'] = [w.impuesto_id.id, w.impuesto_id.name]
+            dict['percepcion_id'] = [w.percepcion_id.id, w.percepcion_id.name]
             dict['diarios_id'] =[x.id for x in w.diarios_id]
 
             res = self.env['report.l10n_sv_extra.reporte_compras'].lineas(dict)
