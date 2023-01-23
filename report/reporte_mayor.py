@@ -142,7 +142,27 @@ class ReporteMayor(models.AbstractModel):
                     totales['saldo_inicial'] += l['saldo_inicial']
                     totales['saldo_final'] += l['saldo_final']
 
-        return {'lineas': lineas,'totales': totales }
+        grupos = []
+        for grupo in self.env['account.group'].search([('id', 'in', datos['grupos_id'])]):
+            grupos.append({'id': grupo.id, 'code_prefix_start': grupo.code_prefix_start, 'name': grupo.name})
+
+        #Agrega los grupos sin movimiento que hayan sido seleccionados en el wizard.
+        lineas_final = []
+        for linea in lineas:
+            dict = {'id': grupos[0]['id'], 'codigo': grupos[0]['code_prefix_start'], 'cuenta': grupos[0]['name'], 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0, 'balance_inicial': True, 'total_debe': 0, 'total_haber': 0, 'fechas': []}
+            while (len(grupos) > 0 and grupos[0]['code_prefix_start'] < linea['codigo']):
+                lineas_final.append(dict)
+                grupos.pop(0)
+            if (len(grupos) > 0 and grupos[0]['code_prefix_start'] == linea['codigo']):
+                grupos.pop(0)
+            lineas_final.append(linea)
+
+        while (len(grupos) > 0):
+            dict = {'id': grupos[0]['id'], 'codigo': grupos[0]['code_prefix_start'], 'cuenta': grupos[0]['name'], 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0, 'balance_inicial': True, 'total_debe': 0, 'total_haber': 0, 'fechas': []}
+            lineas_final.append(dict)
+            grupos.pop(0)
+
+        return {'lineas': lineas_final,'totales': totales }
 
     @api.model
     def _get_report_values(self, docids, data=None):
