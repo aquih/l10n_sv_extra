@@ -26,12 +26,15 @@ class AsistenteReporteMayor(models.TransientModel):
     name = fields.Char('Nombre archivo', size=32)
     archivo = fields.Binary('Archivo', filters='.xls')
 
-    def print_report(self):
+    def print_report(self):    
         data = {
              'ids': [],
              'model': 'l10n_sv_extra.asistente_reporte_mayor',
              'form': self.read()[0]
         }
+        if len(data['form']['grupos_id']) == 0:
+            raise UserError('Debe seleccionar por lo menos un grupo de cuentas.')
+
         return self.env.ref('l10n_sv_extra.action_reporte_mayor').report_action(self, data=data)
 
     def print_report_excel(self):

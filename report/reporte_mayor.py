@@ -2,7 +2,6 @@
 
 from odoo import api, models, fields
 from odoo.release import version_info
-
 import logging
 
 class ReporteMayor(models.AbstractModel):
@@ -60,7 +59,9 @@ class ReporteMayor(models.AbstractModel):
 #                'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name, l.date, t.include_initial_balance ORDER BY a.code',
 #            (datos['fecha_desde'], datos['fecha_hasta']))
 
+            grupos_iniciales = []
             for r in self.env.cr.dictfetchall():
+                grupos_iniciales.append(r['id'])
                 totales['debe'] += r['debe']
                 totales['haber'] += r['haber']
                 linea = {
@@ -75,6 +76,14 @@ class ReporteMayor(models.AbstractModel):
                     'balance_inicial': r['balance_inicial']
                 }
                 lineas.append(linea)
+
+            lineas_adicionales = []
+            for grupo in self.env['account.group'].search([('id', 'in', datos['grupos_id']), ('id', 'not in', grupos_iniciales)]):
+                dict = {'id': grupo.id, 'fecha': False, 'codigo': grupo.code_prefix_start, 'cuenta': grupo.name, 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0, 'total_debe': 0, 'total_haber': 0, 'balance_inicial': False, 'fechas': []}
+                lineas_adicionales.append(dict)
+
+            lineas = lineas + lineas_adicionales
+            lineas.sort(key=lambda i: i['codigo'])
 
             cuentas_agrupadas = {}
             llave = 'codigo'
@@ -115,7 +124,9 @@ class ReporteMayor(models.AbstractModel):
 #            	'where a.id in ('+accounts_str+') and l.date >= %s and l.date <= %s group by a.id, a.code, a.name,t.include_initial_balance ORDER BY a.code',
 #            (datos['fecha_desde'], datos['fecha_hasta']))
 
+            grupos_iniciales = []
             for r in self.env.cr.dictfetchall():
+                grupos_iniciales.append(r['id'])
                 totales['debe'] += r['debe']
                 totales['haber'] += r['haber']
                 linea = {
@@ -142,27 +153,15 @@ class ReporteMayor(models.AbstractModel):
                     totales['saldo_inicial'] += l['saldo_inicial']
                     totales['saldo_final'] += l['saldo_final']
 
-        grupos = []
-        for grupo in self.env['account.group'].search([('id', 'in', datos['grupos_id'])]):
-            grupos.append({'id': grupo.id, 'code_prefix_start': grupo.code_prefix_start, 'name': grupo.name})
+            lineas_adicionales = []
+            for grupo in self.env['account.group'].search([('id', 'in', datos['grupos_id']), ('id', 'not in', grupos_iniciales)]):
+                dict = {'id': grupo.id, 'codigo': grupo.code_prefix_start, 'cuenta': grupo.name, 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0}
+                lineas_adicionales.append(dict)
 
-        #Agrega los grupos sin movimiento que hayan sido seleccionados en el wizard.
-        lineas_final = []
-        for linea in lineas:
-            dict = {'id': grupos[0]['id'], 'codigo': grupos[0]['code_prefix_start'], 'cuenta': grupos[0]['name'], 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0, 'balance_inicial': True, 'total_debe': 0, 'total_haber': 0, 'fechas': []}
-            while (len(grupos) > 0 and grupos[0]['code_prefix_start'] < linea['codigo']):
-                lineas_final.append(dict)
-                grupos.pop(0)
-            if (len(grupos) > 0 and grupos[0]['code_prefix_start'] == linea['codigo']):
-                grupos.pop(0)
-            lineas_final.append(linea)
-
-        while (len(grupos) > 0):
-            dict = {'id': grupos[0]['id'], 'codigo': grupos[0]['code_prefix_start'], 'cuenta': grupos[0]['name'], 'saldo_inicial': 0, 'debe': 0, 'haber': 0, 'saldo_final': 0, 'balance_inicial': True, 'total_debe': 0, 'total_haber': 0, 'fechas': []}
-            lineas_final.append(dict)
-            grupos.pop(0)
-
-        return {'lineas': lineas_final,'totales': totales }
+            lineas = lineas + lineas_adicionales
+            lineas.sort(key=lambda i: i['codigo'])
+        
+        return {'lineas': lineas,'totales': totales }
 
     @api.model
     def _get_report_values(self, docids, data=None):
