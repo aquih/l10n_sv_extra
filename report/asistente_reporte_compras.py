@@ -57,87 +57,106 @@ class AsistenteReporteCompras(models.TransientModel):
             hoja.write(y, 0, 'NO. COR.')
             hoja.write(y, 1, 'FECHA')
             hoja.write(y, 2, 'NO. DE COMPROB.')
-            hoja.write(y, 3, 'NIT')
-            hoja.write(y, 4, 'NÚMERO DE REGISTRO')
+            hoja.write(y, 3, 'NÚMERO DE REGISTRO')
+            hoja.write(y, 4, 'NIT')
             hoja.write(y, 5, 'NOMBRE DEL PROVEEDOR')
             hoja.write(y, 6, 'COMPRA EXENTA LOCAL')
             hoja.write(y, 7, 'COMPRA EXENTA IMPORT')
-            hoja.write(y, 8, 'COMPRA GRAVADA LOCAL')
-            hoja.write(y, 9, 'COMPRA GRAVADA IMPORT')
-            hoja.write(y, 10, 'IVA')
-            hoja.write(y, 11, 'PERCEPCION')
-            hoja.write(y, 12, 'RETENCIÓN')
-            hoja.write(y, 13, 'TOTAL COMPRAS')
-            hoja.write(y, 14, 'IVA TERCEROS')
+            hoja.write(y, 8, 'COMPRA EXENTA INTERN')
+            hoja.write(y, 9, 'COMPRA GRAVADA LOCAL')
+            hoja.write(y, 10, 'COMPRA GRAVADA IMPORT')
+            hoja.write(y, 11, 'COMPRA GRAVADA INTERN')
+            hoja.write(y, 12, 'CREDITO FISCAL')
+            hoja.write(y, 13, 'TOTAL')
+            hoja.write(y, 14, 'PERCEPCION')
+            hoja.write(y, 15, 'RETENCIÓN')
+            hoja.write(y, 16, 'COMPRA SUJETO EXCLU')
+            hoja.write(y, 17, 'IVA TERCEROS')
 
             correlativo = 1
             mes_actual = ''
             for linea in lineas:
                 y += 1
                 hoja.write(y, 0, linea['correlativo'])
-                hoja.write(y, 1, str(linea['fecha']))
+                hoja.write(y, 1, linea['fecha'].strftime('%d/%m/%Y'))
                 hoja.write(y, 2, linea['numero'])
-                hoja.write(y, 3, linea['proveedor'].vat)
-                hoja.write(y, 4, linea['proveedor'].numero_registro)
+                hoja.write(y, 3, linea['proveedor'].numero_registro)
+                hoja.write(y, 4, linea['proveedor'].vat)
                 hoja.write(y, 5, linea['proveedor'].name)
                 hoja.write(y, 6, 0)
                 hoja.write(y, 7, 0)
-                hoja.write(y, 8, linea['compra'] + linea['servicio'])
-                hoja.write(y, 9, linea['importacion'])
-                hoja.write(y, 10, linea['iva'])
-                hoja.write(y, 11, linea['percepcion'])
-                hoja.write(y, 12, linea['compra_exento'])
+                hoja.write(y, 8, 0)
+                hoja.write(y, 9, linea['compra'] + linea['servicio'])
+                hoja.write(y, 10, linea['importacion'])
+                hoja.write(y, 11, 0)
+                hoja.write(y, 12, linea['iva'])
                 hoja.write(y, 13, linea['total'])
-                hoja.write(y, 14, 0)
-            
+                hoja.write(y, 14, linea['percepcion'])
+                hoja.write(y, 15, linea['compra_exento'])
+                hoja.write(y, 16, 0)
+                hoja.write(y, 17, 0)
+
             y += 1    
             hoja.write(y, 5, 'Totales')
             hoja.write(y, 6, 0)
             hoja.write(y, 7, 0)
-            hoja.write(y, 8, totales['compra']['neto'] + totales['servicio']['neto'])
-            hoja.write(y, 9, totales['importacion']['neto'])
-            hoja.write(y, 10, totales['compra']['iva'] + totales['servicio']['iva'] + totales['combustible']['iva'] + totales['importacion']['iva'])
-            hoja.write(y, 11, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
-            hoja.write(y, 12, totales['compra']['exento'])
-            hoja.write(y, 13, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
-            hoja.write(y, 14, 0)
-
+            hoja.write(y, 8, 0)
+            hoja.write(y, 9, totales['compra']['neto'] + totales['servicio']['neto'])
+            hoja.write(y, 10, totales['importacion']['neto'])
+            hoja.write(y, 11, 0)
+            hoja.write(y, 12, totales['compra']['iva'] + totales['servicio']['iva'] + totales['combustible']['iva'] + totales['importacion']['iva'])
+            hoja.write(y, 13, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
+            hoja.write(y, 14, totales['compra']['exento'])
+            hoja.write(y, 15, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
+            hoja.write(y, 16, 0)
+            hoja.write(y, 17, 0)
             y += 2
             hoja.write(y, 0, 'RESUMEN DE COMPRAS')
             y += 2
             
             hoja.write(y, 0, 'TOTAL COMPRAS')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 1, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
+
             y += 1
             hoja.write(y, 0, 'TOTAL N/C')
             hoja.write(y, 1, 0)
             y += 1
             hoja.write(y, 0, 'COMPRAS GRAVADAS')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 1, totales['compra']['neto'] + totales['servicio']['neto'])
+
             y += 1
-            hoja.write(y, 0, 'VA GRAVADO')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 0, 'IVA GRAVADO')
+            hoja.write(y, 1, totales['compra']['iva'] + totales['servicio']['iva'] + totales['combustible']['iva'] + totales['importacion']['iva'])
             y += 1
             hoja.write(y, 0, 'PERCEPCION')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 1, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
             y += 1
             hoja.write(y, 0, 'COMPRAS EXENTAS')
             hoja.write(y, 1, 0)
             y += 1
-            hoja.write(y, 0, 'ANT. A CTA. IVA 2%')
+            hoja.write(y, 0, 'COMPRAS EXENTAS IMPORTACIONES')
             hoja.write(y, 1, 0)
             y += 1
-            hoja.write(y, 0, 'NO SUJETAS')
+            hoja.write(y, 0, 'COMPRAS EXENTAS INTERNACIONES')
             hoja.write(y, 1, 0)
             y += 1
-            hoja.write(y, 0, 'IVA TERCEROS')
+            hoja.write(y, 0, 'COMPRAS GRAVADAS IMPORTACION')
             hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'COMPRAS GRAVADAS INTERNACIONES')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'COMPRAS SUJETO EXCLUIDOS')
+            hoja.write(y, 1, 0)
+            y += 1
+            hoja.write(y, 0, 'RETENCIONES')
+            hoja.write(y, 1, totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
             y += 1
             hoja.write(y, 0, 'TOTAL DE COMPRAS')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 1, totales['compra']['percepcion'] + totales['servicio']['percepcion'] + totales['combustible']['percepcion'] + totales['importacion']['percepcion'])
             y += 1
             hoja.write(y, 0, 'TOTAL DE IMPUESTOS')
-            hoja.write(y, 1, 0)
+            hoja.write(y, 1, totales['compra']['iva'] + totales['servicio']['iva'] + totales['combustible']['iva'] + totales['importacion']['iva'] + totales['compra']['total'] + totales['servicio']['total'] + totales['combustible']['total'] + totales['importacion']['total'] + totales['compra']['exento'])
             y += 1
             
             libro.close()
