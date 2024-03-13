@@ -159,7 +159,7 @@
         </record>
 
         <act_window id="window_reporte_kardex" name="Kardex" res_model="l10n_sv_extra.asistente_kardex" binding_model="product.product" view_mode="form" target="new"/>
-        <menuitem action="window_reporte_kardex" id="menu_asistente_kardex" parent="stock.menu_warehouse_report"/>
+        <menuitem action="window_reporte_kardex" id="menu_asistente_kardex" parent="menu_informes"/>
         <report id="action_reporte_kardex" model="l10n_sv_extra.asistente_kardex" string="Kardex" report_type="qweb-pdf" name="l10n_sv_extra.reporte_kardex" file="l10n_sv_extra.reporte_kardex"/>
 
     </data>
