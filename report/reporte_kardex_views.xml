@@ -6,9 +6,13 @@
             <t t-set="data_report_margin_top" t-value="20"/>
             <t t-call="web.internal_layout">
                 <div class="page">
-                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/><br/>
-                    REGISTRO DE CONTROL DE INVENTARIOS (Kardex)<br/></p>
-                    <br/><br/>
+                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/>
+                        <br/>
+                        REGISTRO DE CONTROL DE INVENTARIOS (Kardex)
+                        <br/>
+                    </p>
+                    <br/>
+                    <br/>
 
                     <table style="width:300px">
                         <tr>
@@ -107,4 +111,5 @@
             </t>
         </t>
     </template>
+    
 </odoo>

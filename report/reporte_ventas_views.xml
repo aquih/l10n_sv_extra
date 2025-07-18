@@ -9,12 +9,16 @@
             </div>
             <div class="page">
                 <t t-if="data['resumido'] == False">
-                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/><br/>
-                    LIBRO VENTAS CONTRIBUYENTES<br/>
-                    NIT: <span t-field="user.company_id.partner_id.vat"/><br/>
-                    NRC: <span t-field="user.company_id.partner_id.numero_registro"/><br/>
-                    MES: <span t-esc="mes(data['fecha_desde'][5:7])"/> <span t-esc="data['fecha_desde'][0:4]"/><br/></p>
-                    <br/><br/>
+                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/>
+                        <br/>
+                        LIBRO VENTAS CONTRIBUYENTES<br/>
+                        NIT: <span t-field="user.company_id.partner_id.vat"/><br/>
+                        NRC: <span t-field="user.company_id.partner_id.numero_registro"/><br/>
+                        MES: <span t-esc="mes(data['fecha_desde'][5:7])"/> <span t-esc="data['fecha_desde'][0:4]"/>
+                        <br/>
+                    </p>
+                    <br/>
+                    <br/>
                     <t t-set="result" t-value="lineas(data)"/>
 
                     <table style="width:900px;margin:0px auto 0px auto">
@@ -309,4 +313,5 @@
             </div>
         </t>
     </template>
+    
 </odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="kardex_asistente_kardex" model="ir.ui.view">
+        <field name="name">kardex_asistente_kardex</field>
+        <field name="model">l10n_sv_extra.asistente_kardex</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Seleccione cuenta y rango de fecha">
+                <group>
+                    <group>
+                        <field name="ubicacion_id"/>
+                        <field name="name_excel" invisible="1"/>
+                        <field name="archivo_excel" readonly="1" filename="name_excel"/>
+                    </group>
+                    <group>
+                        <field name="fecha_desde"/>
+                        <field name="fecha_hasta"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="producto_ids"/>
+                </group>
+                <footer>
+                    <button name="print_report" string="Reporte PDF" type="object" class="oe_highlight"/>
+                    o
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_kardex_wizard">
+        <field name="name">Kardex SV</field>
+        <field name="res_model">l10n_sv_extra.asistente_kardex</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_reporte_kardex" model="ir.actions.report">
+        <field name="name">Kardex SV</field>
+        <field name="model">l10n_sv_extra.asistente_kardex</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_sv_extra.reporte_kardex</field>
+        <field name="report_file">l10n_sv_extra.reporte_kardex</field>
+    </record>
+
+    <menuitem action="action_kardex_wizard" id="menu_wizard_kardex_wizard" name="Kardex SV" parent="stock.menu_warehouse_report"/>
+
+</odoo>
