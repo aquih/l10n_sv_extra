@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="Extra" name="extra_sv">
+                <page string="Extra SV" name="extra_sv">
                     <group string="Configuración SV">
                         <group>
                             <field name="direccion" invisible="type not in ['sale', 'purchase']"/>
