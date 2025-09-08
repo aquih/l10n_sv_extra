@@ -2,7 +2,7 @@
 
 {
     'name': 'El Salvador - Reportes y funcionalidad extra',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Localization',
     'description': """ Reportes requeridos y otra funcionalidad extra para llevar un contabilidad en El Salvador. """,
     'author': 'Aquih, S.A.',
