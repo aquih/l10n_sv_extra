@@ -46,7 +46,7 @@ class ReporteCompras(models.AbstractModel):
                 tipo_cambio = abs(total / f.amount_total)
 
             tipo = 'FACT'
-            if f.type != 'in_invoice':
+            if f.move_type != 'in_invoice':
                 tipo = 'NC'
             if f.partner_id.pequenio_contribuyente:
                 tipo += ' PEQ'
