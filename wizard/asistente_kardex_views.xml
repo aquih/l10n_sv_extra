@@ -45,6 +45,6 @@
         <field name="report_file">l10n_sv_extra.reporte_kardex</field>
     </record>
 
-    <menuitem action="action_kardex_wizard" id="menu_wizard_kardex_wizard" name="Kardex SV" parent="stock.menu_warehouse_report"/>
+    <menuitem action="action_kardex_wizard" id="menu_wizard_kardex_wizard" name="Kardex SV" parent="menu_informes"/>
 
 </odoo>
