@@ -10,7 +10,7 @@
             </div>
             <t t-call="web.external_layout">
                 <div class="page">
-                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/><br/>
+                    <p style="text-align:center"><span t-field="env.company.partner_id.name"/><br/>
                     LIBRO DIARIO MAYOR<br/>
                     (CIFRAS EXPRESADAS EN DOLARES DE LOS ESTADOS UNIDOS DE AMERICA)<br/>
                     Registro del: <span t-esc="data['fecha_desde']" t-options='{"widget": "date"}'/> al: <span t-esc="data['fecha_hasta']" t-options='{"widget": "date"}'/><br/></p>
