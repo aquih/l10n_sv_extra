@@ -102,7 +102,7 @@ class ReporteCompras(models.AbstractModel):
                             totales[tipo_linea]['percepcion'] += i['amount']
                             totales[tipo_linea]['total'] += i['amount']
                         elif i['amount'] > 0:
-                            linea[f.tipo_gasto+'_exento'] += i['amount']
+                            linea[tipo_linea+'_exento'] += i['amount']
                             totales[tipo_linea]['exento'] += i['amount']
                 else:
                     linea[tipo_linea+'_exento'] += r['total_excluded']

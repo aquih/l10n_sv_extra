@@ -114,7 +114,7 @@ class ReporteVentas(models.AbstractModel):
                             linea['iva_retenido'] += i['amount']
                             totales[tipo_linea]['iva_retenido'] += i['amount']
                         elif i['amount'] > 0:
-                            linea[f.tipo_gasto+'_exento'] += i['amount']
+                            linea[tipo_linea+'_exento'] += i['amount']
                             totales[tipo_linea]['exento'] += i['amount']
                 else:
                     linea[tipo_linea+'_exento'] += r['total_excluded']
