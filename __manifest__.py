@@ -7,7 +7,7 @@
     'description': """ Reportes requeridos y otra funcionalidad extra para llevar un contabilidad en El Salvador. """,
     'author': 'Aquih, S.A.',
     'website': 'http://aquih.com/',
-    'depends': ['l10n_sv'],
+    'depends': ['l10n_sv', 'stock'],
     'data': [
         'views/account_views.xml',
         'report/report_views.xml',
