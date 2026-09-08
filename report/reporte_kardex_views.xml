@@ -6,7 +6,7 @@
             <t t-set="data_report_margin_top" t-value="20"/>
             <t t-call="web.internal_layout">
                 <div class="page">
-                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/>
+                    <p style="text-align:center"><span t-field="res_company.partner_id.name"/>
                         <br/>
                         REGISTRO DE CONTROL DE INVENTARIOS (Kardex)
                         <br/>
@@ -21,11 +21,11 @@
                         </tr>
                         <tr>
                             <td>NIT:</td>
-                            <td><span t-field="user.company_id.partner_id.vat"/></td>
+                            <td><span t-field="res_company.partner_id.vat"/></td>
                         </tr>
                         <tr>
                             <td>NRC:</td>
-                            <td><span t-field="user.company_id.partner_id.numero_registro"/></td>
+                            <td><span t-field="res_company.partner_id.numero_registro"/></td>
                         </tr>
                     </table>
 

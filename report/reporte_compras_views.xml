@@ -10,11 +10,11 @@
             </div>
             <t t-call="web.external_layout">
                 <div class="page">
-                    <p style="text-align:center"><span t-field="user.company_id.partner_id.name"/>
+                    <p style="text-align:center"><span t-field="res_company.partner_id.name"/>
                         <br/>
                         LIBRO COMPRAS<br/>
-                        NIT: <span t-field="user.company_id.partner_id.vat"/><br/>
-                        NRC: <span t-field="user.company_id.partner_id.numero_registro"/><br/>
+                        NIT: <span t-field="res_company.partner_id.vat"/><br/>
+                        NRC: <span t-field="res_company.partner_id.numero_registro"/><br/>
                         MES: <span t-esc="mes(data['fecha_desde'][5:7])"/> <span t-esc="data['fecha_desde'][0:4]"/>
                         <br/>
                     </p>
@@ -64,34 +64,34 @@
                                     <span t-esc="l['proveedor'].name"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['compra'] + l['servicio']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['compra'] + l['servicio']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['importacion']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['importacion']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['iva']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['iva']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['percepcion']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['percepcion']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['compra_exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['compra_exento']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="l['total']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="l['total']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                             </tr>
                             <tr style="font-size:10px">
@@ -109,34 +109,34 @@
                                     TOTALES
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['compra']['neto'] + result['totales']['servicio']['neto']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['compra']['neto'] + result['totales']['servicio']['neto']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['importacion']['neto']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['importacion']['neto']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['compra']['iva'] + result['totales']['servicio']['iva'] + result['totales']['combustible']['iva'] + result['totales']['importacion']['iva']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['compra']['iva'] + result['totales']['servicio']['iva'] + result['totales']['combustible']['iva'] + result['totales']['importacion']['iva']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['compra']['percepcion'] + result['totales']['servicio']['percepcion'] + result['totales']['combustible']['percepcion'] + result['totales']['importacion']['percepcion']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['compra']['percepcion'] + result['totales']['servicio']['percepcion'] + result['totales']['combustible']['percepcion'] + result['totales']['importacion']['percepcion']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['combustible']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="result['totales']['compra']['total'] + result['totales']['servicio']['total'] + result['totales']['combustible']['total'] + result['totales']['importacion']['total'] + result['totales']['compra']['exento']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    <span t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                             </tr>
                         </tbody>

@@ -1,12 +1,11 @@
 # -*- encoding: utf-8 -*-
-
 {
     'name': 'El Salvador - Reportes y funcionalidad extra',
-    'version': '1.3',
+    'version': '1.4',
     'category': 'Localization',
     'description': """ Reportes requeridos y otra funcionalidad extra para llevar un contabilidad en El Salvador. """,
-    'author': 'Aquih, S.A.',
-    'website': 'http://aquih.com/',
+    'author': 'aquíH',
+    'website': 'http://www.aquih.com/',
     'depends': ['l10n_sv', 'stock'],
     'data': [
         'views/account_views.xml',
@@ -23,5 +22,5 @@
     ],
     'demo': [],
     'installable': True,
+    'license': 'Other OSI approved licence',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
